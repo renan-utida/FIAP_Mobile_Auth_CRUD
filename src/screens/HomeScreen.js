@@ -1,10 +1,25 @@
-import { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
-import { createProduct } from '../firebase/productService';
+import { useEffect, useState } from 'react';
+import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
+import { createProduct, getProducts } from '../firebase/productService';
 
 export default function HomeScreen({ navigation }) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [products, setProducts] = useState([]);
+
+  async function loadProducts() {
+    try {
+      const productList = await getProducts();
+      setProducts(productList);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Erro', 'Não foi possível carregar os produtos.');
+    }
+  }
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   async function handleAddProduct() {
     if (!name.trim() || !price.trim()) {
@@ -20,6 +35,7 @@ export default function HomeScreen({ navigation }) {
       Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
       setName('');
       setPrice('');
+      loadProducts();
     } catch (error) {
       console.error(error);
       Alert.alert('Erro', 'Não foi possível cadastrar o produto.');
@@ -27,8 +43,10 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Bem-vindo!</Text>
+    <View style={{ flex: 1, padding: 20 }}>
+      <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
+        Bem-vindo!
+      </Text>
 
       <TextInput
         placeholder="Nome do produto"
@@ -57,7 +75,30 @@ export default function HomeScreen({ navigation }) {
 
       <Button title="Cadastrar produto" onPress={handleAddProduct} />
 
-      <View style={{ marginTop: 20 }}>
+      <Text style={{ fontSize: 20, marginTop: 30, marginBottom: 10 }}>
+        Produtos cadastrados
+      </Text>
+
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
+        renderItem={({ item }) => (
+          <View
+            style={{
+              borderWidth: 1,
+              borderRadius: 5,
+              padding: 10,
+              marginBottom: 10,
+            }}
+          >
+            <Text>Nome: {item.name}</Text>
+            <Text>Preço: {item.price}</Text>
+          </View>
+        )}
+      />
+
+      <View style={{ marginTop: 10 }}>
         <Button title="Sair" onPress={() => navigation.navigate('Login')} />
       </View>
     </View>
