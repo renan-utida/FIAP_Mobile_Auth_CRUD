@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
-import { createProduct, getProducts } from '../firebase/productService';
+import { createProduct, getProducts, deleteProduct } from '../firebase/productService';
 
 export default function HomeScreen({ navigation }) {
   const [name, setName] = useState('');
@@ -40,6 +40,33 @@ export default function HomeScreen({ navigation }) {
       console.error(error);
       Alert.alert('Erro', 'Não foi possível cadastrar o produto.');
     }
+  }
+
+  function handleDeleteProduct(productId) {
+    Alert.alert(
+      'Excluir produto',
+      'Tem certeza que deseja excluir este produto?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteProduct(productId);
+              Alert.alert('Sucesso', 'Produto excluído com sucesso!');
+              loadProducts();
+            } catch (error) {
+              console.error(error);
+              Alert.alert('Erro', 'Não foi possível excluir o produto.');
+            }
+          },
+        },
+      ]
+    );
   }
 
   return (
@@ -94,11 +121,17 @@ export default function HomeScreen({ navigation }) {
           >
             <Text>Nome: {item.name}</Text>
             <Text>Preço: {item.price}</Text>
+            <View style={{ marginTop: 10 }}>
+              <Button
+                title="Excluir"
+                onPress={() => handleDeleteProduct(item.id)}
+              />
+            </View>
           </View>
         )}
       />
 
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 12 }}>
         <Button title="Sair" onPress={() => navigation.navigate('Login')} />
       </View>
     </View>
