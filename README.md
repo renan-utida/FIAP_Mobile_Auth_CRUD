@@ -179,7 +179,9 @@ As credenciais do Firebase ficam no arquivo `.env`, que está no `.gitignore` e 
 ## 👨‍🎓 Informações acadêmicas
 
 Desenvolvido durante as aulas de **Mobile Development & IoT** — FIAP  
+
 Curso: Engenharia de Software 
+
 Turma: 3ESPW
 
 [<img loading="lazy" src="https://github.com/user-attachments/assets/b4f96f4b-542e-4988-9bc1-b1acf22a41a1" width=115><br><sub>Renan Dias Utida</sub>](https://github.com/renan-utida)
