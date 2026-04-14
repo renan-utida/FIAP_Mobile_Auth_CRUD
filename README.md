@@ -1,4 +1,4 @@
-# 📱 FIAP_Mobile-Auth-CRUD
+# 📱 FIAP_Mobile_Auth_CRUD
 
 Aplicação mobile desenvolvida com **React Native + Expo** durante as aulas de **Mobile Development** da FIAP, cobrindo layout, navegação, autenticação com Firebase e CRUD completo com Realtime Database.
 
