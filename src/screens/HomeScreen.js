@@ -1,10 +1,15 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
-import { createProduct, getProducts, deleteProduct, updateProduct } from '../firebase/productService';
+import { useEffect, useState } from "react";
+import { View, Text, TextInput, Button, Alert, FlatList } from "react-native";
+import {
+  createProduct,
+  getProducts,
+  deleteProduct,
+  updateProduct,
+} from "../firebase/productService";
 
 export default function HomeScreen({ navigation }) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
   const [products, setProducts] = useState([]);
   const [editingProductId, setEditingProductId] = useState(null);
 
@@ -14,7 +19,7 @@ export default function HomeScreen({ navigation }) {
       setProducts(productList);
     } catch (error) {
       console.error(error);
-      Alert.alert('Erro', 'Não foi possível carregar os produtos.');
+      Alert.alert("Erro", "Não foi possível carregar os produtos.");
     }
   }
 
@@ -23,14 +28,14 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   function clearForm() {
-    setName('');
-    setPrice('');
+    setName("");
+    setPrice("");
     setEditingProductId(null);
   }
 
   async function handleSaveProduct() {
     if (!name.trim() || !price.trim()) {
-      Alert.alert('Atenção', 'Preencha nome e preço do produto.');
+      Alert.alert("Atenção", "Preencha nome e preço do produto.");
       return;
     }
 
@@ -40,19 +45,19 @@ export default function HomeScreen({ navigation }) {
           name: name.trim(),
           price: price.trim(),
         });
-        Alert.alert('Sucesso', 'Produto atualizado com sucesso!');
+        Alert.alert("Sucesso", "Produto atualizado com sucesso!");
       } else {
         await createProduct({
           name: name.trim(),
           price: price.trim(),
         });
-        Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
+        Alert.alert("Sucesso", "Produto cadastrado com sucesso!");
       }
       clearForm();
       loadProducts();
     } catch (error) {
       console.error(error);
-      Alert.alert('Erro', 'Não foi possível salvar o produto.');
+      Alert.alert("Erro", "Não foi possível salvar o produto.");
     }
   }
 
@@ -66,34 +71,27 @@ export default function HomeScreen({ navigation }) {
     clearForm();
   }
 
-  function handleDeleteProduct(productId) {
-    Alert.alert(
-      'Excluir produto',
-      'Tem certeza que deseja excluir este produto?',
-      [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Excluir',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteProduct(productId);
-              if (editingProductId === productId) {
-                clearForm();
-              }
-              Alert.alert('Sucesso', 'Produto excluído com sucesso!');
-              loadProducts();
-            } catch (error) {
-              console.error(error);
-              Alert.alert('Erro', 'Não foi possível excluir o produto.');
-            }
-          },
-        },
-      ]
+  async function handleDeleteProduct(productId) {
+    const confirmDelete = window.confirm(
+      "Tem certeza que deseja excluir este produto?"
     );
+    if (!confirmDelete) return;
+
+    try {
+      await deleteProduct(productId);
+      if (editingProductId === productId) {
+        clearForm();
+      }
+      Alert.alert("Sucesso", "Produto excluído com sucesso!");
+      loadProducts();
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Erro", "Não foi possível excluir o produto.");
+    }
+  }
+
+  function handleOpenScanner() {
+    navigation.navigate("BarcodeScanner");
   }
 
   return (
@@ -101,6 +99,10 @@ export default function HomeScreen({ navigation }) {
       <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
         Bem-vindo!
       </Text>
+
+      <View style={{ marginBottom: 20 }}>
+        <Button title="Ler código de barras" onPress={handleOpenScanner} />
+      </View>
 
       <TextInput
         placeholder="Nome do produto"
@@ -128,7 +130,7 @@ export default function HomeScreen({ navigation }) {
       />
 
       <Button
-        title={editingProductId ? 'Atualizar produto' : 'Cadastrar produto'}
+        title={editingProductId ? "Atualizar produto" : "Cadastrar produto"}
         onPress={handleSaveProduct}
       />
 
@@ -158,10 +160,7 @@ export default function HomeScreen({ navigation }) {
             <Text>Nome: {item.name}</Text>
             <Text>Preço: {item.price}</Text>
             <View style={{ marginTop: 10 }}>
-              <Button
-                title="Editar"
-                onPress={() => handleEditProduct(item)}
-              />
+              <Button title="Editar" onPress={() => handleEditProduct(item)} />
             </View>
             <View style={{ marginTop: 10 }}>
               <Button
@@ -174,7 +173,7 @@ export default function HomeScreen({ navigation }) {
       />
 
       <View style={{ marginTop: 20 }}>
-        <Button title="Sair" onPress={() => navigation.navigate('Login')} />
+        <Button title="Sair" onPress={() => navigation.navigate("Login")} />
       </View>
     </View>
   );
