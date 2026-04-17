@@ -1,6 +1,6 @@
 # 📱 FIAP_Mobile_Auth_CRUD
 
-Aplicação mobile desenvolvida com **React Native + Expo** durante as aulas de **Mobile Development** da FIAP, cobrindo layout, navegação, autenticação com Firebase e CRUD completo com Realtime Database.
+Aplicação mobile desenvolvida com **React Native + Expo** durante as aulas de **Mobile Development** da FIAP, cobrindo layout, navegação, autenticação com Firebase, CRUD completo com Realtime Database e leitura de código de barras.
 
 ---
 
@@ -17,6 +17,7 @@ Aplicação mobile desenvolvida com **React Native + Expo** durante as aulas de 
 - [React Navigation](https://reactnavigation.org/) — navegação entre telas
 - [Firebase Authentication](https://firebase.google.com/products/auth) — autenticação por email/senha
 - [Firebase Realtime Database](https://firebase.google.com/products/realtime-database) — CRUD de produtos
+- [Expo Camera](https://docs.expo.dev/versions/latest/sdk/camera/) — leitura de código de barras
 
 ---
 
@@ -38,7 +39,8 @@ fiap-auth-app/
         ├── LoginScreen.js
         ├── RegisterScreen.js
         ├── ForgotPasswordScreen.js
-        └── HomeScreen.js
+        ├── HomeScreen.js
+        └── BarcodeScannerScreen.js
 ```
 
 ---
@@ -103,6 +105,28 @@ Foco na criação, listagem, edição e exclusão de produtos no Firebase Realti
 
 ---
 
+### Aula 04 — Leitor de Código de Barras
+
+Foco na integração da câmera do dispositivo para leitura de código de barras e vinculação ao cadastro de produtos.
+
+**O que foi feito:**
+- Instalação do `expo-camera` compatível com Expo SDK 54
+- Criação da tela `BarcodeScannerScreen` com:
+  - Solicitação de permissão da câmera
+  - Abertura da câmera com `CameraView`
+  - Leitura de código de barras via `onBarcodeScanned`
+  - Prevenção de leituras múltiplas em sequência
+  - Alert com o código lido e retorno automático para a Home
+- Registro da nova tela no `AppNavigator`
+- Atualização da `HomeScreen` com:
+  - Botão **"Ler código de barras"** no topo
+  - Campo de código de barras no formulário
+  - Preenchimento automático do campo ao voltar do scanner via `route.params`
+  - Salvamento do campo `barcode` junto ao produto no Firebase
+  - Exibição do código de barras na listagem de produtos
+
+---
+
 ## ⚙️ Como rodar o projeto
 
 ### Pré-requisitos
@@ -113,7 +137,7 @@ Foco na criação, listagem, edição e exclusão de produtos no Firebase Realti
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/fiap-mobile-auth-crud.git
+git clone https://github.com/renan-utida/fiap-mobile-auth-crud.git
 cd fiap-mobile-auth-crud
 ```
 
@@ -151,6 +175,8 @@ npx expo start
 
 > ⚠️ Sempre que criar ou alterar o `.env`, reinicie o servidor com `Ctrl+C` e rode `npx expo start` novamente para carregar as novas variáveis.
 
+> ⚠️ A leitura de código de barras requer **dispositivo físico** com o Expo Go — não funciona no browser.
+
 ---
 
 ## 🔒 Variáveis de ambiente
@@ -168,7 +194,9 @@ As credenciais do Firebase ficam no arquivo `.env`, que está no `.gitignore` e 
 | Login → Esqueci senha | Navega para tela de recuperação |
 | Cadastro → Login | Cria usuário real no Firebase e volta ao login |
 | Esqueci senha → Login | Envia email de redefinição e volta ao login |
-| Home → Cadastrar produto | Salva produto no Realtime Database |
+| Home → Ler código de barras | Abre a câmera para leitura |
+| Scanner → Home | Retorna o código lido e preenche o campo automaticamente |
+| Home → Cadastrar produto | Salva produto (com código de barras) no Realtime Database |
 | Home → Listar produtos | Carrega e exibe produtos do banco ao abrir a tela |
 | Home → Editar produto | Preenche formulário com dados do produto para atualização |
 | Home → Excluir produto | Remove produto do banco com confirmação |
@@ -178,15 +206,15 @@ As credenciais do Firebase ficam no arquivo `.env`, que está no `.gitignore` e 
 
 ## 👨‍🎓 Informações acadêmicas
 
-Desenvolvido durante as aulas de **Mobile Development & IoT** — FIAP  
+Desenvolvido durante as aulas de **Mobile Development & IoT** — FIAP
 
-Curso: Engenharia de Software 
+Curso: Engenharia de Software
 
 Turma: 3ESPW
 
 [<img loading="lazy" src="https://github.com/user-attachments/assets/b4f96f4b-542e-4988-9bc1-b1acf22a41a1" width=115><br><sub>Renan Dias Utida</sub>](https://github.com/renan-utida)
 
-**Renan Dias Utida** - RM558540 
+**Renan Dias Utida** - RM558540
 
 Estudante de Engenharia de Software na FIAP
 
