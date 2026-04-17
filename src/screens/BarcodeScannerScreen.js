@@ -1,15 +1,26 @@
 import { useState } from 'react'; 
-import { View, Text, Button } from 'react-native'; 
+import { View, Text, Button, Alert } from 'react-native'; 
 import { CameraView, useCameraPermissions } from 'expo-camera'; 
  
-export default function BarcodeScannerScreen() { 
+export default function BarcodeScannerScreen({ navigation }) { 
   const [permission, requestPermission] = useCameraPermissions(); 
   const [scanned, setScanned] = useState(false); 
-  const [scannedCode, setScannedCode] = useState(''); 
  
   function handleBarcodeScanned({ data }) { 
+    if (scanned) return; 
+ 
     setScanned(true); 
-    setScannedCode(data); 
+ 
+    Alert.alert('Código lido', data, [ 
+      { 
+        text: 'OK', 
+        onPress: () => { 
+          navigation.navigate('Home', { 
+            scannedBarcode: data, 
+          }); 
+        }, 
+      }, 
+    ]); 
   } 
  
   if (!permission) { 
@@ -61,22 +72,15 @@ export default function BarcodeScannerScreen() {
           Leitor de Código de Barras 
         </Text> 
  
-        {scannedCode ? ( 
-          <Text style={{ marginBottom: 20 }}> 
-            Código lido: {scannedCode} 
-          </Text> 
-        ) : ( 
-          <Text style={{ marginBottom: 20 }}> 
-            Aponte a câmera para um código de barras. 
-          </Text> 
-        )} 
+        <Text style={{ marginBottom: 20 }}> 
+          Aponte a câmera para um código de barras. 
+        </Text> 
  
         {scanned && ( 
           <Button 
             title="Ler novamente" 
             onPress={() => { 
               setScanned(false); 
-              setScannedCode(''); 
             }} 
           /> 
         )} 
