@@ -12,6 +12,7 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   createProduct,
   getProducts,
@@ -33,11 +34,30 @@ function parsePriceToSave(formatted) {
 }
 
 export default function HomeScreen({ navigation, route }) {
+  const insets = useSafeAreaInsets();
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [barcode, setBarcode] = useState("");
   const [products, setProducts] = useState([]);
   const [editingProductId, setEditingProductId] = useState(null);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillShow" : "keyboardDidShow",
+      (e) => setKeyboardHeight(e.endCoordinates.height)
+    );
+    const hideListener = Keyboard.addListener(
+      Platform.OS === "ios" ? "keyboardWillHide" : "keyboardDidHide",
+      () => setKeyboardHeight(0)
+    );
+
+    return () => {
+      showListener.remove();
+      hideListener.remove();
+    };
+  }, []);
 
   async function loadProducts() {
     try {
@@ -176,11 +196,14 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior="padding"
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
-          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+          contentContainerStyle={{
+            padding: 20,
+            paddingBottom: Math.max(insets.bottom, 40) + keyboardHeight,
+          }}
           keyboardShouldPersistTaps="handled"
         >
           <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
@@ -246,7 +269,6 @@ export default function HomeScreen({ navigation, route }) {
           <FlatList
             data={products}
             keyExtractor={(item) => item.id}
-            scrollEnabled={false}
             ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
             renderItem={({ item }) => (
               <View
