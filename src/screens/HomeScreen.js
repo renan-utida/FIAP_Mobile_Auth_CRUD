@@ -56,7 +56,16 @@ export default function HomeScreen({ navigation, route }) {
     if (route.params?.scannedBarcode) {
       setBarcode(String(route.params.scannedBarcode));
     }
-  }, [route.params?.scannedBarcode]);
+    if (route.params?.savedName) {
+      setName(route.params.savedName);
+    }
+    if (route.params?.savedPrice) {
+      setPrice(route.params.savedPrice);
+    }
+    if (route.params?.savedEditingId) {
+      setEditingProductId(route.params.savedEditingId);
+    }
+  }, [route.params]);
 
   function clearForm() {
     setName("");
@@ -146,7 +155,11 @@ export default function HomeScreen({ navigation, route }) {
   }
 
   function handleOpenScanner() {
-    navigation.navigate("BarcodeScanner");
+    navigation.navigate("BarcodeScanner", {
+      savedName: name,
+      savedPrice: price,
+      savedEditingId: editingProductId || "",
+    });
   }
 
   function formatDisplayPrice(rawPrice) {
@@ -166,7 +179,7 @@ export default function HomeScreen({ navigation, route }) {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1, padding: 20 }}>
-          <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20}}>
+          <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
             Bem-vindo!
           </Text>
 
