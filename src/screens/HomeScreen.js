@@ -269,6 +269,7 @@ export default function HomeScreen({ navigation, route }) {
           <FlatList
             data={products}
             keyExtractor={(item) => item.id}
+            scrollEnabled={false}
             ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
             renderItem={({ item }) => (
               <View
