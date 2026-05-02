@@ -6,7 +6,70 @@ Aplicação mobile desenvolvida com **React Native + Expo** durante as aulas de 
 
 ## 📸 Screenshots
 
-> _Prints serão adicionados em breve._
+---
+
+### 🔐 Autenticação — Cadastro e Login
+
+Fluxo completo de criação de conta e acesso ao app via Firebase Authentication.
+
+<div align="center">
+  <img src="./src/screenshots/1.png" width="18%" alt="Tela de Login" />
+  <img src="./src/screenshots/2.png" width="18%" alt="Tela de Cadastro vazia" />
+  <img src="./src/screenshots/3.png" width="18%" alt="Tela de Cadastro preenchida" />
+  <img src="./src/screenshots/4.png" width="18%" alt="Confirmação de cadastro com sucesso" />
+  <img src="./src/screenshots/5.png" width="18%" alt="Login preenchido" />
+</div>
+
+> Da esquerda para direita: tela de login · tela de cadastro · preenchimento dos dados · confirmação de cadastro · login com as credenciais criadas.
+
+---
+
+### 🏠 Home & 📷 Leitor de Código de Barras
+
+Acesso à tela principal e uso da câmera para leitura e preenchimento automático do código de barras.
+
+<div align="center">
+  <img src="./src/screenshots/6.png" width="23%" alt="Home sem produtos" />
+  <img src="./src/screenshots/7.png" width="23%" alt="Scanner com câmera ativa" />
+  <img src="./src/screenshots/8.png" width="23%" alt="Alert com código lido" />
+  <img src="./src/screenshots/9.png" width="23%" alt="Home com campos preenchidos pelo scanner" />
+</div>
+
+> Da esquerda para direita: home sem produtos · câmera apontada para código de barras · alert com o código lido · campo de código de barras preenchido automaticamente na Home.
+
+---
+
+### 🛒 CRUD de Produtos
+
+Cadastro, listagem, edição e exclusão de produtos no Firebase Realtime Database.
+
+<div align="center">
+  <img src="./src/screenshots/10.png" width="18%" alt="Sucesso ao cadastrar produto" />
+  <img src="./src/screenshots/11.png" width="18%" alt="Listagem de produtos" />
+  <img src="./src/screenshots/12.png" width="18%" alt="Formulário de edição" />
+  <img src="./src/screenshots/13.png" width="18%" alt="Sucesso ao atualizar produto" />
+  <img src="./src/screenshots/14.png" width="18%" alt="Confirmação de exclusão" />
+</div>
+
+> Da esquerda para direita: confirmação de cadastro · produto listado · edição do preço · confirmação de atualização · diálogo de confirmação de exclusão.
+
+---
+
+### ☁️ Firebase Console
+
+Dados reais registrados no Firebase após o uso do app — usuários autenticados e produtos salvos no banco.
+
+<div align="center">
+  <img src="./src/screenshots/15.png" width="80%" alt="Firebase Authentication — lista de usuários cadastrados" />
+</div>
+
+<p align="center"><em>Firebase Authentication — 6 usuários cadastrados via app.</em></p>
+
+<div align="center">
+  <img src="./src/screenshots/16.png" width="80%" alt="Firebase Realtime Database — produto Banana cadastrado" />
+</div>
+
+<p align="center"><em>Firebase Realtime Database — produto salvo com nome, preço e código de barras.</em></p>
 
 ---
 
