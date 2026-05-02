@@ -10,6 +10,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  ScrollView,
 } from "react-native";
 import {
   createProduct,
@@ -178,7 +179,10 @@ export default function HomeScreen({ navigation, route }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, padding: 20 }}>
+        <ScrollView
+          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
             Bem-vindo!
           </Text>
@@ -242,6 +246,7 @@ export default function HomeScreen({ navigation, route }) {
           <FlatList
             data={products}
             keyExtractor={(item) => item.id}
+            scrollEnabled={false}
             ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
             renderItem={({ item }) => (
               <View
@@ -281,7 +286,7 @@ export default function HomeScreen({ navigation, route }) {
               onPress={() => navigation.navigate("Login")}
             />
           </View>
-        </View>
+        </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
