@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,18 @@ import {
   Keyboard,
   Platform,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { loginUser } from '../firebase/authService';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  useFocusEffect(
+    useCallback(() => {
+      setPassword('');
+    }, [])
+  );
 
   async function handleLogin() {
     if (!email.trim() || !password.trim()) {
