@@ -15,7 +15,19 @@ export default function AppNavigator() {
   return (
     <NavigationContainer>
       <SafeAreaView style={styles.container} edges={['bottom']}>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#1A1A1A',
+            },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+            headerShadowVisible: false,
+          }}
+        >
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Cadastro" component={RegisterScreen} />
           <Stack.Screen name="EsqueciSenha" component={ForgotPasswordScreen} />

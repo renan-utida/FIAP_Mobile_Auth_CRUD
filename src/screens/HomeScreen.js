@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -39,6 +39,9 @@ export default function HomeScreen({ navigation, route }) {
   const [barcode, setBarcode] = useState("");
   const [products, setProducts] = useState([]);
   const [editingProductId, setEditingProductId] = useState(null);
+
+  const scrollViewRef = useRef(null);
+  const formYRef = useRef(0);
 
   async function loadProducts() {
     try {
@@ -118,6 +121,11 @@ export default function HomeScreen({ navigation, route }) {
     );
     setBarcode(product.barcode || "");
     setEditingProductId(product.id);
+
+    // Scroll automático até o formulário
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: formYRef.current - 10, animated: true });
+    }, 100);
   }
 
   function handleCancelEdit() {
@@ -172,32 +180,44 @@ export default function HomeScreen({ navigation, route }) {
       style={styles.keyboardView}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      {/* Header  */}
+      <View style={styles.header}>
+        <View>
+          <Text style={styles.headerGreeting}>Bem-vindo!</Text>
+          <Text style={styles.headerTitle}>Meus Produtos</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.logoutText}>Sair</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
+          ref={scrollViewRef}
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Produtos</Text>
-            <TouchableOpacity
-              style={styles.logoutButton}
-              onPress={() => navigation.navigate("Login")}
-            >
-              <Text style={styles.logoutText}>Sair</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Botão Scanner */}
-          <TouchableOpacity style={styles.scannerButton} onPress={handleOpenScanner}>
-            <Text style={styles.scannerButtonText}>📷  Ler código de barras</Text>
-          </TouchableOpacity>
-
-          {/* Formulário */}
-          <View style={styles.card}>
+          {/* Card */}
+          <View
+            style={styles.card}
+            onLayout={(e) => {
+              formYRef.current = e.nativeEvent.layout.y;
+            }}
+          >
             <Text style={styles.cardTitle}>
               {editingProductId ? "Editar produto" : "Novo produto"}
             </Text>
+
+            {/* Scanner */}
+            <TouchableOpacity
+              style={styles.scannerButton}
+              onPress={handleOpenScanner}
+            >
+              <Text style={styles.scannerButtonText}>📷  Ler código de barras</Text>
+            </TouchableOpacity>
 
             <Text style={styles.label}>Nome</Text>
             <TextInput
@@ -227,21 +247,31 @@ export default function HomeScreen({ navigation, route }) {
               style={styles.input}
             />
 
-            <TouchableOpacity style={styles.buttonPrimary} onPress={handleSaveProduct}>
+            <TouchableOpacity
+              style={styles.buttonPrimary}
+              onPress={handleSaveProduct}
+            >
               <Text style={styles.buttonPrimaryText}>
                 {editingProductId ? "Atualizar produto" : "Cadastrar produto"}
               </Text>
             </TouchableOpacity>
 
             {editingProductId && (
-              <TouchableOpacity style={styles.buttonCancel} onPress={handleCancelEdit}>
+              <TouchableOpacity
+                style={styles.buttonCancel}
+                onPress={handleCancelEdit}
+              >
                 <Text style={styles.buttonCancelText}>Cancelar edição</Text>
               </TouchableOpacity>
             )}
           </View>
 
-          {/* Lista */}
-          <Text style={styles.sectionTitle}>Produtos cadastrados</Text>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Produtos cadastrados</Text>
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{products.length}</Text>
+            </View>
+          </View>
 
           <FlatList
             data={products}
@@ -252,13 +282,17 @@ export default function HomeScreen({ navigation, route }) {
             }
             renderItem={({ item }) => (
               <View style={styles.productCard}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>
-                  {formatDisplayPrice(item.price)}
-                </Text>
-                <Text style={styles.productBarcode}>
-                  🔖 {item.barcode || "Sem código de barras"}
-                </Text>
+
+                {/* Info do produto */}
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>
+                    {formatDisplayPrice(item.price)}
+                  </Text>
+                  <Text style={styles.productBarcode}>
+                    🔖 {item.barcode || "Sem código de barras"}
+                  </Text>
+                </View>
 
                 <View style={styles.productActions}>
                   <TouchableOpacity
@@ -272,9 +306,10 @@ export default function HomeScreen({ navigation, route }) {
                     style={styles.deleteButton}
                     onPress={() => handleDeleteProduct(item.id)}
                   >
-                    <Text style={styles.deleteButtonText}>Excluir</Text>
+                    <Text style={styles.deleteButtonText}>✕</Text>
                   </TouchableOpacity>
                 </View>
+
               </View>
             )}
           />
@@ -289,20 +324,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#0D0D0D',
   },
-  container: {
-    padding: 20,
-    paddingBottom: 40,
-    backgroundColor: '#0D0D0D',
-  },
+
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 24,
+    backgroundColor: '#0D0D0D',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#1E1E1E',
+  },
+  headerGreeting: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 2,
   },
   headerTitle: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#FFFFFF',
   },
@@ -319,18 +359,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-  scannerButton: {
-    backgroundColor: '#7C3AED',
-    borderRadius: 12,
+
+  container: {
     padding: 16,
-    alignItems: 'center',
-    marginBottom: 24,
+    paddingBottom: 40,
+    backgroundColor: '#0D0D0D',
   },
-  scannerButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+
   card: {
     backgroundColor: '#1A1A1A',
     borderRadius: 16,
@@ -345,6 +380,20 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: 16,
   },
+
+  scannerButton: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 12,
+    padding: 14,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  scannerButtonText: {
+    color: '#FFF',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
+
   label: {
     fontSize: 13,
     color: '#AAA',
@@ -388,11 +437,30 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 14,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 14,
+  },
+  badge: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 12,
+    paddingHorizontal: 9,
+    paddingVertical: 3,
+    minWidth: 26,
+    alignItems: 'center',
+  },
+  badgeText: {
+    color: '#FFF',
+    fontSize: 13,
+    fontWeight: 'bold',
   },
   emptyText: {
     color: '#555',
@@ -400,6 +468,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingVertical: 20,
   },
+
   productCard: {
     backgroundColor: '#1A1A1A',
     borderRadius: 12,
@@ -407,6 +476,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: '#2A2A2A',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  productInfo: {
+    flex: 1,
+    marginRight: 10,
   },
   productName: {
     fontSize: 17,
@@ -423,17 +499,17 @@ const styles = StyleSheet.create({
   productBarcode: {
     fontSize: 13,
     color: '#666',
-    marginBottom: 14,
   },
   productActions: {
     flexDirection: 'row',
-    gap: 10,
+    alignItems: 'center',
+    gap: 8,
   },
   editButton: {
-    flex: 1,
     backgroundColor: '#242424',
     borderRadius: 8,
-    padding: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#7C3AED',
@@ -444,17 +520,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   deleteButton: {
-    flex: 1,
     backgroundColor: '#242424',
     borderRadius: 8,
-    padding: 10,
+    width: 36,
+    height: 36,
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: '#EF4444',
   },
   deleteButtonText: {
     color: '#EF4444',
-    fontWeight: '600',
-    fontSize: 14,
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
