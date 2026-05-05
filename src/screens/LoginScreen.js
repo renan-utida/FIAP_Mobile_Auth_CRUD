@@ -3,13 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   TouchableOpacity,
   Alert,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  StyleSheet,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { loginUser } from '../firebase/authService';
@@ -40,41 +40,152 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.keyboardView}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
-          <Text style={{ fontSize: 24, marginBottom: 20 }}>Login</Text>
+        <View style={styles.container}>
 
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            style={{ borderWidth: 1, marginBottom: 10, padding: 10, borderRadius: 5 }}
-          />
+          <View style={styles.headerContainer}>
+            <Text style={styles.title}>Bem-vindo</Text>
+            <Text style={styles.subtitle}>Faça login para continuar</Text>
+          </View>
 
-          <TextInput
-            placeholder="Senha"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={{ borderWidth: 1, marginBottom: 20, padding: 10, borderRadius: 5 }}
-          />
+          <View style={styles.card}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              placeholder="seu@email.com"
+              placeholderTextColor="#666"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              style={styles.input}
+            />
 
-          <Button title="Entrar" onPress={handleLogin} />
+            <Text style={styles.label}>Senha</Text>
+            <TextInput
+              placeholder="••••••••"
+              placeholderTextColor="#666"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              style={styles.input}
+            />
 
-          <TouchableOpacity onPress={() => navigation.navigate('Cadastro')}>
-            <Text style={{ marginTop: 15 }}>Criar conta?</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonPrimary} onPress={handleLogin}>
+              <Text style={styles.buttonPrimaryText}>Entrar</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.navigate('EsqueciSenha')}>
-            <Text style={{ marginTop: 10 }}>Esqueci minha senha</Text>
-          </TouchableOpacity>
+            <View style={styles.divider} />
+
+            <TouchableOpacity
+              style={styles.buttonSecondary}
+              onPress={() => navigation.navigate('Cadastro')}
+            >
+              <Text style={styles.buttonSecondaryText}>Criar conta</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.linkButton}
+              onPress={() => navigation.navigate('EsqueciSenha')}
+            >
+              <Text style={styles.linkText}>Esqueci minha senha</Text>
+            </TouchableOpacity>
+          </View>
+
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardView: {
+    flex: 1,
+    backgroundColor: '#0D0D0D',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+    backgroundColor: '#0D0D0D',
+  },
+  headerContainer: {
+    marginBottom: 32,
+  },
+  title: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 6,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#888',
+  },
+  card: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 16,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+  },
+  label: {
+    fontSize: 13,
+    color: '#AAA',
+    marginBottom: 6,
+    marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  input: {
+    backgroundColor: '#242424',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 15,
+    color: '#FFF',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  buttonPrimary: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  buttonPrimaryText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#2A2A2A',
+    marginVertical: 20,
+  },
+  buttonSecondary: {
+    backgroundColor: 'transparent',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#7C3AED',
+    marginBottom: 12,
+  },
+  buttonSecondaryText: {
+    color: '#7C3AED',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  linkButton: {
+    alignItems: 'center',
+    padding: 8,
+  },
+  linkText: {
+    color: '#888',
+    fontSize: 14,
+  },
+});
