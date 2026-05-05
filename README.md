@@ -192,11 +192,15 @@ Foco na integração da câmera do dispositivo para leitura de código de barras
 
 ## 🏆 Checkpoint 2 — Melhorias implementadas
 
-A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usabilidade obrigatórias solicitadas pelo professor.
+A partir da versão resultante da Aula 4, foram implementadas melhorias de usabilidade — 4 obrigatórias solicitadas pelo professor e 4 extras.
 
 ---
 
-### Melhoria 1 — Formatação do campo preço no padrão brasileiro
+### Melhorias Obrigatórias
+
+---
+
+#### Melhoria 1 — Formatação do campo preço no padrão brasileiro
 
 **Problema:** o campo preço aceitava qualquer valor sem formatação ou validação de tipo.
 
@@ -209,7 +213,7 @@ A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usa
 
 ---
 
-### Melhoria 2 — Tratamento do teclado para telas pequenas
+#### Melhoria 2 — Tratamento do teclado para telas pequenas
 
 **Problema:** ao abrir o teclado virtual em telas pequenas, ele sobrepunha o formulário impedindo a visualização e interação com os campos. Não havia como fechar o teclado tocando fora dos inputs.
 
@@ -220,7 +224,7 @@ A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usa
 
 ---
 
-### Melhoria 3 — Preservar dados do formulário ao voltar do scanner
+#### Melhoria 3 — Preservar dados do formulário ao voltar do scanner
 
 **Problema:** ao navegar da Home para a tela do scanner e voltar, os dados preenchidos nos campos Nome e Preço eram perdidos, ficando apenas o código de barras recém lido.
 
@@ -231,7 +235,7 @@ A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usa
 
 ---
 
-### Melhoria 4 — Scroll da tela inteira para visibilidade dos itens
+#### Melhoria 4 — Scroll da tela inteira para visibilidade dos itens
 
 **Problema:** em telas pequenas, a lista de produtos ficava parcialmente cortada e não era possível visualizar ou acessar os itens que estavam abaixo da área visível.
 
@@ -240,6 +244,52 @@ A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usa
 - O `FlatList` recebeu `scrollEnabled={false}` para delegar o controle de scroll ao `ScrollView` externo, evitando conflito entre os dois componentes no Android
 - `keyboardShouldPersistTaps="handled"` foi adicionado ao `ScrollView` para garantir que toques nos botões funcionem mesmo com o teclado aberto
 - `paddingBottom: 40` foi adicionado ao final da tela para garantir que o botão Sair não fique cortado ao rolar
+
+---
+
+### Melhorias Adicionais
+
+---
+
+#### Melhoria 5 (Extra) — Tratamento do teclado nas telas de autenticação
+
+**Problema:** a melhoria 2 havia sido aplicada apenas na `HomeScreen`. As telas de `LoginScreen`, `RegisterScreen` e `ForgotPasswordScreen` ainda sofriam do mesmo problema de sobreposição do teclado.
+
+**Solução implementada:**
+- `KeyboardAvoidingView`, `TouchableWithoutFeedback` e `Keyboard.dismiss` foram aplicados também nas telas `RegisterScreen` e `ForgotPasswordScreen`
+
+---
+
+#### Melhoria 6 (Extra) — Limpeza da senha ao retornar para o Login
+
+**Problema:** ao navegar da `LoginScreen` para `RegisterScreen` ou `ForgotPasswordScreen` e voltar, o campo de senha permanecia preenchido, o que representa um risco de segurança caso outra pessoa tenha acesso ao dispositivo.
+
+**Solução implementada:**
+- `useFocusEffect` do React Navigation foi adicionado à `LoginScreen`
+- Toda vez que a tela recebe foco — inclusive ao voltar de outras telas — o campo senha é limpo automaticamente via `setPassword('')`
+- O campo email é mantido preenchido para conveniência do usuário, que não precisa redigitá-lo
+
+---
+
+#### Melhoria 7 (Extra) — Scroll na tela de Cadastro
+
+**Problema:** a melhoria 4 havia sido aplicada apenas na `HomeScreen`. A `RegisterScreen`, por ter 3 campos, poderia ter o botão "Cadastrar" escondido atrás do teclado em dispositivos com telas menores.
+
+**Solução implementada:**
+- O container da `RegisterScreen` foi substituído de `View` para `ScrollView` com `flexGrow: 1` e `justifyContent: center`
+- `keyboardShouldPersistTaps="handled"` garante que o botão Cadastrar funcione mesmo com o teclado aberto
+- `paddingBottom: 40` evita que o botão fique cortado ao rolar
+
+---
+
+#### Melhoria 8 (Extra) — Respeito à área segura do dispositivo (Safe Area)
+
+**Problema:** em dispositivos Android com barra de navegação inferior (3 botões: voltar, home e multitarefa), o conteúdo do app ficava posicionado atrás dessa faixa, sobrepondo elementos da interface do sistema.
+
+**Solução implementada:**
+- `SafeAreaProvider` do pacote `react-native-safe-area-context` foi adicionado ao `App.js`, envolvendo todo o app
+- `SafeAreaView` com `edges={['bottom']}` foi aplicado no `AppNavigator`, respeitando a borda inferior em todas as telas automaticamente
+- A solução é compatível com todos os dispositivos: Android com barra de 3 botões, iPhone com botão home físico e iPhone sem botão (notch/Dynamic Island)
 
 ---
 
