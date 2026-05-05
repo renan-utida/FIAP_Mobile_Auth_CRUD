@@ -190,6 +190,59 @@ Foco na integração da câmera do dispositivo para leitura de código de barras
 
 ---
 
+## 🏆 Checkpoint 2 — Melhorias implementadas
+
+A partir da versão resultante da Aula 4, foram implementadas 4 melhorias de usabilidade obrigatórias solicitadas pelo professor.
+
+---
+
+### Melhoria 1 — Formatação do campo preço no padrão brasileiro
+
+**Problema:** o campo preço aceitava qualquer valor sem formatação ou validação de tipo.
+
+**Solução implementada:**
+- O campo preço passa a formatar o valor em tempo real enquanto o usuário digita, no padrão `R$ 0,00`
+- Apenas dígitos numéricos são aceitos — letras e caracteres especiais são ignorados automaticamente
+- O valor é salvo no Firebase de forma limpa (ex: `1299.99`) via função `parsePriceToSave`
+- Na listagem de produtos, o preço é exibido formatado em Real brasileiro via função `formatDisplayPrice`
+- Ao editar um produto, o preço já salvo é carregado corretamente no formato `R$ 0,00` no campo
+
+---
+
+### Melhoria 2 — Tratamento do teclado para telas pequenas
+
+**Problema:** ao abrir o teclado virtual em telas pequenas, ele sobrepunha o formulário impedindo a visualização e interação com os campos. Não havia como fechar o teclado tocando fora dos inputs.
+
+**Solução implementada:**
+- Toda a tela foi envolta em `KeyboardAvoidingView`, que empurra o conteúdo para cima automaticamente quando o teclado abre
+- O comportamento é diferenciado por plataforma: `padding` no iOS e `height` no Android, usando `Platform.OS`
+- `TouchableWithoutFeedback` com `Keyboard.dismiss` permite fechar o teclado ao tocar em qualquer área fora dos inputs
+
+---
+
+### Melhoria 3 — Preservar dados do formulário ao voltar do scanner
+
+**Problema:** ao navegar da Home para a tela do scanner e voltar, os dados preenchidos nos campos Nome e Preço eram perdidos, ficando apenas o código de barras recém lido.
+
+**Solução implementada:**
+- Ao abrir o scanner, a `HomeScreen` passa os valores atuais de `name`, `price` e `editingProductId` como parâmetros de navegação para a `BarcodeScannerScreen`
+- A `BarcodeScannerScreen` armazena esses valores e os devolve junto com o `scannedBarcode` ao navegar de volta para a Home
+- O `useEffect` da `HomeScreen` recupera todos os parâmetros de volta, restaurando nome, preço e estado de edição exatamente como estavam antes de abrir a câmera
+
+---
+
+### Melhoria 4 — Scroll da tela inteira para visibilidade dos itens
+
+**Problema:** em telas pequenas, a lista de produtos ficava parcialmente cortada e não era possível visualizar ou acessar os itens que estavam abaixo da área visível.
+
+**Solução implementada:**
+- O container interno da `HomeScreen` foi substituído de `View` para `ScrollView`, permitindo rolagem de toda a tela
+- O `FlatList` recebeu `scrollEnabled={false}` para delegar o controle de scroll ao `ScrollView` externo, evitando conflito entre os dois componentes no Android
+- `keyboardShouldPersistTaps="handled"` foi adicionado ao `ScrollView` para garantir que toques nos botões funcionem mesmo com o teclado aberto
+- `paddingBottom: 40` foi adicionado ao final da tela para garantir que o botão Sair não fique cortado ao rolar
+
+---
+
 ## ⚙️ Como rodar o projeto
 
 ### Pré-requisitos
@@ -262,7 +315,7 @@ As credenciais do Firebase ficam no arquivo `.env`, que está no `.gitignore` e 
 | Home → Cadastrar produto | Salva produto (com código de barras) no Realtime Database |
 | Home → Listar produtos | Carrega e exibe produtos do banco ao abrir a tela |
 | Home → Editar produto | Preenche formulário com dados do produto para atualização |
-| Home → Excluir produto | Remove produto do banco com confirmação |
+| Home → Excluir produto | Remove produto do banco com confirmação via Alert |
 | Home → Sair | Volta para a tela de login |
 
 ---
@@ -285,4 +338,3 @@ Estudante de Engenharia de Software na FIAP
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/renan-utida)
 
 ---
-
