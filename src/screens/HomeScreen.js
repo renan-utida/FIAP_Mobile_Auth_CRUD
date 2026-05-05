@@ -3,7 +3,7 @@ import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   Alert,
   FlatList,
   KeyboardAvoidingView,
@@ -11,6 +11,7 @@ import {
   Keyboard,
   Platform,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 import {
   createProduct,
@@ -128,21 +129,14 @@ export default function HomeScreen({ navigation, route }) {
       "Excluir produto",
       "Tem certeza que deseja excluir este produto?",
       [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
+        { text: "Cancelar", style: "cancel" },
         {
           text: "Excluir",
           style: "destructive",
           onPress: async () => {
             try {
               await deleteProduct(productId);
-
-              if (editingProductId === productId) {
-                clearForm();
-              }
-
+              if (editingProductId === productId) clearForm();
               Alert.alert("Sucesso", "Produto excluído com sucesso!");
               await loadProducts();
             } catch (error) {
@@ -175,119 +169,292 @@ export default function HomeScreen({ navigation, route }) {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.keyboardView}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
-          contentContainerStyle={{ padding: 20, paddingBottom: 40 }}
+          contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={{ fontSize: 24, marginTop: 40, marginBottom: 20 }}>
-            Bem-vindo!
-          </Text>
-
-          <View style={{ marginBottom: 20 }}>
-            <Button title="Ler código de barras" onPress={handleOpenScanner} />
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Produtos</Text>
+            <TouchableOpacity
+              style={styles.logoutButton}
+              onPress={() => navigation.navigate("Login")}
+            >
+              <Text style={styles.logoutText}>Sair</Text>
+            </TouchableOpacity>
           </View>
 
-          <TextInput
-            placeholder="Nome do produto"
-            value={name}
-            onChangeText={setName}
-            style={{
-              borderWidth: 1,
-              marginBottom: 10,
-              padding: 10,
-              borderRadius: 5,
-            }}
-          />
+          {/* Botão Scanner */}
+          <TouchableOpacity style={styles.scannerButton} onPress={handleOpenScanner}>
+            <Text style={styles.scannerButtonText}>📷  Ler código de barras</Text>
+          </TouchableOpacity>
 
-          <TextInput
-            placeholder="Preço (R$)"
-            value={price}
-            onChangeText={handlePriceChange}
-            keyboardType="numeric"
-            style={{
-              borderWidth: 1,
-              marginBottom: 10,
-              padding: 10,
-              borderRadius: 5,
-            }}
-          />
+          {/* Formulário */}
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>
+              {editingProductId ? "Editar produto" : "Novo produto"}
+            </Text>
 
-          <TextInput
-            placeholder="Código de barras"
-            value={barcode}
-            onChangeText={setBarcode}
-            style={{
-              borderWidth: 1,
-              marginBottom: 20,
-              padding: 10,
-              borderRadius: 5,
-            }}
-          />
+            <Text style={styles.label}>Nome</Text>
+            <TextInput
+              placeholder="Nome do produto"
+              placeholderTextColor="#666"
+              value={name}
+              onChangeText={setName}
+              style={styles.input}
+            />
 
-          <Button
-            title={editingProductId ? "Atualizar produto" : "Cadastrar produto"}
-            onPress={handleSaveProduct}
-          />
+            <Text style={styles.label}>Preço</Text>
+            <TextInput
+              placeholder="R$ 0,00"
+              placeholderTextColor="#666"
+              value={price}
+              onChangeText={handlePriceChange}
+              keyboardType="numeric"
+              style={styles.input}
+            />
 
-          {editingProductId && (
-            <View style={{ marginTop: 10 }}>
-              <Button title="Cancelar edição" onPress={handleCancelEdit} />
-            </View>
-          )}
+            <Text style={styles.label}>Código de barras</Text>
+            <TextInput
+              placeholder="Leia ou digite o código"
+              placeholderTextColor="#666"
+              value={barcode}
+              onChangeText={setBarcode}
+              style={styles.input}
+            />
 
-          <Text style={{ fontSize: 20, marginTop: 30, marginBottom: 10 }}>
-            Produtos cadastrados
-          </Text>
+            <TouchableOpacity style={styles.buttonPrimary} onPress={handleSaveProduct}>
+              <Text style={styles.buttonPrimaryText}>
+                {editingProductId ? "Atualizar produto" : "Cadastrar produto"}
+              </Text>
+            </TouchableOpacity>
+
+            {editingProductId && (
+              <TouchableOpacity style={styles.buttonCancel} onPress={handleCancelEdit}>
+                <Text style={styles.buttonCancelText}>Cancelar edição</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Lista */}
+          <Text style={styles.sectionTitle}>Produtos cadastrados</Text>
 
           <FlatList
             data={products}
             keyExtractor={(item) => item.id}
             scrollEnabled={false}
-            ListEmptyComponent={<Text>Nenhum produto cadastrado.</Text>}
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>Nenhum produto cadastrado.</Text>
+            }
             renderItem={({ item }) => (
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderRadius: 5,
-                  padding: 10,
-                  marginBottom: 10,
-                }}
-              >
-                <Text>Nome: {item.name}</Text>
-                <Text>Preço: {formatDisplayPrice(item.price)}</Text>
-                <Text>
-                  Código de barras: {item.barcode || "Não informado"}
+              <View style={styles.productCard}>
+                <Text style={styles.productName}>{item.name}</Text>
+                <Text style={styles.productPrice}>
+                  {formatDisplayPrice(item.price)}
+                </Text>
+                <Text style={styles.productBarcode}>
+                  🔖 {item.barcode || "Sem código de barras"}
                 </Text>
 
-                <View style={{ marginTop: 10 }}>
-                  <Button
-                    title="Editar"
+                <View style={styles.productActions}>
+                  <TouchableOpacity
+                    style={styles.editButton}
                     onPress={() => handleEditProduct(item)}
-                  />
-                </View>
+                  >
+                    <Text style={styles.editButtonText}>Editar</Text>
+                  </TouchableOpacity>
 
-                <View style={{ marginTop: 10 }}>
-                  <Button
-                    title="Excluir"
+                  <TouchableOpacity
+                    style={styles.deleteButton}
                     onPress={() => handleDeleteProduct(item.id)}
-                  />
+                  >
+                    <Text style={styles.deleteButtonText}>Excluir</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             )}
           />
-
-          <View style={{ marginTop: 20 }}>
-            <Button
-              title="Sair"
-              onPress={() => navigation.navigate("Login")}
-            />
-          </View>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  keyboardView: {
+    flex: 1,
+    backgroundColor: '#0D0D0D',
+  },
+  container: {
+    padding: 20,
+    paddingBottom: 40,
+    backgroundColor: '#0D0D0D',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 24,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  logoutButton: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  logoutText: {
+    color: '#888',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  scannerButton: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  scannerButtonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  card: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+    marginBottom: 28,
+  },
+  cardTitle: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 13,
+    color: '#AAA',
+    marginBottom: 6,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  input: {
+    backgroundColor: '#242424',
+    borderRadius: 10,
+    padding: 14,
+    fontSize: 15,
+    color: '#FFF',
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#333',
+  },
+  buttonPrimary: {
+    backgroundColor: '#7C3AED',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  buttonPrimaryText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  buttonCancel: {
+    backgroundColor: 'transparent',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: '#444',
+  },
+  buttonCancelText: {
+    color: '#888',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 14,
+  },
+  emptyText: {
+    color: '#555',
+    fontSize: 15,
+    textAlign: 'center',
+    paddingVertical: 20,
+  },
+  productCard: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+  },
+  productName: {
+    fontSize: 17,
+    fontWeight: 'bold',
+    color: '#FFF',
+    marginBottom: 4,
+  },
+  productPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#7C3AED',
+    marginBottom: 6,
+  },
+  productBarcode: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 14,
+  },
+  productActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  editButton: {
+    flex: 1,
+    backgroundColor: '#242424',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#7C3AED',
+  },
+  editButtonText: {
+    color: '#7C3AED',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  deleteButton: {
+    flex: 1,
+    backgroundColor: '#242424',
+    borderRadius: 8,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#EF4444',
+  },
+  deleteButtonText: {
+    color: '#EF4444',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+});
