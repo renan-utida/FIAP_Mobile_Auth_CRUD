@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { registerUser } from '../firebase/authService';
 
@@ -38,7 +39,15 @@ export default function RegisterScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1, justifyContent: 'center', padding: 20 }}>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'center',
+            padding: 20,
+            paddingBottom: 40,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
           <Text style={{ fontSize: 24, marginBottom: 20 }}>Cadastro</Text>
 
           <TextInput
@@ -66,7 +75,7 @@ export default function RegisterScreen({ navigation }) {
           />
 
           <Button title="Cadastrar" onPress={handleRegister} />
-        </View>
+        </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
