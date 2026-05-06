@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 24,
     backgroundColor: '#0D0D0D',
+    marginBottom: 40,
   },
   headerContainer: {
     marginBottom: 32,

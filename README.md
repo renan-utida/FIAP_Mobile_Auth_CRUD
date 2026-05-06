@@ -30,12 +30,11 @@ Acesso à tela principal e uso da câmera para leitura e preenchimento automáti
 
 <div align="center">
   <img src="./assets/screenshots/6.png" width="23%" alt="Home sem produtos" />
-  <img src="./assets/screenshots/7.png" width="23%" alt="Scanner com câmera ativa" />
-  <img src="./assets/screenshots/8.png" width="23%" alt="Alert com código lido" />
-  <img src="./assets/screenshots/9.png" width="23%" alt="Home com campos preenchidos pelo scanner" />
+  <img src="./assets/screenshots/7.png" width="23%" alt="Alert com código lido" />
+  <img src="./assets/screenshots/8.png" width="23%" alt="Home com campos preenchidos pelo scanner" />
 </div>
 
-> Da esquerda para direita: home sem produtos · câmera apontada para código de barras · alert com o código lido · campo de código de barras preenchido automaticamente na Home.
+> Da esquerda para direita: home sem produtos · alert com o código lido · campo de código de barras preenchido automaticamente na Home.
 
 ---
 
@@ -44,11 +43,11 @@ Acesso à tela principal e uso da câmera para leitura e preenchimento automáti
 Cadastro, listagem, edição e exclusão de produtos no Firebase Realtime Database.
 
 <div align="center">
-  <img src="./assets/screenshots/10.png" width="18%" alt="Sucesso ao cadastrar produto" />
-  <img src="./assets/screenshots/11.png" width="18%" alt="Listagem de produtos" />
-  <img src="./assets/screenshots/12.png" width="18%" alt="Formulário de edição" />
-  <img src="./assets/screenshots/13.png" width="18%" alt="Sucesso ao atualizar produto" />
-  <img src="./assets/screenshots/14.png" width="18%" alt="Confirmação de exclusão" />
+  <img src="./assets/screenshots/9.png" width="18%" alt="Sucesso ao cadastrar produto" />
+  <img src="./assets/screenshots/10.png" width="18%" alt="Listagem de produtos" />
+  <img src="./assets/screenshots/11.png" width="18%" alt="Formulário de edição" />
+  <img src="./assets/screenshots/12.png" width="18%" alt="Sucesso ao atualizar produto" />
+  <img src="./assets/screenshots/13.png" width="18%" alt="Confirmação de exclusão" />
 </div>
 
 > Da esquerda para direita: confirmação de cadastro · produto listado · edição do preço · confirmação de atualização · diálogo de confirmação de exclusão.
@@ -60,13 +59,13 @@ Cadastro, listagem, edição e exclusão de produtos no Firebase Realtime Databa
 Dados reais registrados no Firebase após o uso do app — usuários autenticados e produtos salvos no banco.
 
 <div align="center">
-  <img src="./assets/screenshots/15.png" width="80%" alt="Firebase Authentication — lista de usuários cadastrados" />
+  <img src="./assets/screenshots/14.png" width="80%" alt="Firebase Authentication — lista de usuários cadastrados" />
 </div>
 
 <p align="center"><em>Firebase Authentication — 6 usuários cadastrados via app.</em></p>
 
 <div align="center">
-  <img src="./assets/screenshots/16.png" width="80%" alt="Firebase Realtime Database — produto Banana cadastrado" />
+  <img src="./assets/screenshots/15.png" width="80%" alt="Firebase Realtime Database — produto Banana cadastrado" />
 </div>
 
 <p align="center"><em>Firebase Realtime Database — produto salvo com nome, preço e código de barras.</em></p>
