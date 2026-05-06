@@ -292,6 +292,44 @@ A partir da versão resultante da Aula 4, foram implementadas melhorias de usabi
 
 ---
 
+## 🎨 Estilização
+ 
+Após a implementação de todas as funcionalidades e melhorias, o app recebeu uma identidade visual completa com tema **Dark Mode + Roxo/Violeta**, aplicada em todas as telas.
+ 
+---
+ 
+### Paleta de cores
+ 
+| Elemento | Cor |
+|---|---|
+| Fundo geral | `#0D0D0D` |
+| Card / container | `#1A1A1A` |
+| Input | `#242424` |
+| Borda sutil | `#2A2A2A` / `#333` |
+| Botão primário | `#7C3AED` (roxo) |
+| Texto principal | `#FFFFFF` |
+| Texto secundário | `#888` / `#AAA` |
+| Labels | `#AAA` |
+| Botão excluir | `#EF4444` (vermelho) |
+ 
+---
+ 
+### O que foi estilizado por tela
+ 
+**LoginScreen** — título grande com subtítulo, card escuro com inputs estilizados, botão primário roxo sólido, botão secundário com borda roxa e link discreto para esqueci a senha.
+ 
+**RegisterScreen** — mesma identidade do Login, com `ScrollView` para garantir visibilidade do botão Cadastrar em telas menores ao abrir o teclado.
+ 
+**ForgotPasswordScreen** — layout centralizado com subtítulo explicativo, input e botão no mesmo padrão das demais telas de autenticação.
+ 
+**HomeScreen** — header fixo no topo com título e botão Sair, card de formulário com botão de scanner integrado, badge roxo com contador de produtos, cards de produto com info à esquerda e botões compactos (Editar + X) à direita, scroll automático ao clicar em Editar, preço destacado em roxo na listagem.
+ 
+**BarcodeScannerScreen** — câmera em tela cheia com overlay escuro semi-transparente e mira de scan com cantos roxos, painel inferior escuro com instruções e botão "Ler novamente".
+ 
+**AppNavigator** — header do React Navigation estilizado com fundo `#1A1A1A`, texto e ícones brancos e sombra removida para integração suave com o tema escuro.
+ 
+---
+
 ## ⚙️ Como rodar o projeto
 
 ### Pré-requisitos
