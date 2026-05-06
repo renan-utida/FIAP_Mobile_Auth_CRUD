@@ -62,7 +62,7 @@ Dados reais registrados no Firebase após o uso do app — usuários autenticado
   <img src="./assets/screenshots/14.png" width="80%" alt="Firebase Authentication — lista de usuários cadastrados" />
 </div>
 
-<p align="center"><em>Firebase Authentication — 6 usuários cadastrados via app.</em></p>
+<p align="center"><em>Firebase Authentication — 4 usuários cadastrados via app.</em></p>
 
 <div align="center">
   <img src="./assets/screenshots/15.png" width="80%" alt="Firebase Realtime Database — produto Banana cadastrado" />
